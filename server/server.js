@@ -1,6 +1,6 @@
 //Framework Configuration
 const express = require("express");
-const connectDb = require("./config/dbConnection");
+const connectDb = require("./config/dbConnections");
 const errorHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 const hbs = require("hbs");
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(errorHandler);
 
 app.use('/api/register', require("./routes/userRoutes"));
-
+app.use("/api/doctors", require("./routes/doctorRoutes"));
 
 // ERROR handling middleware
 app.use(errorHandler);
