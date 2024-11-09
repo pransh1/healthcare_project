@@ -1,7 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const Doctor = require("../models/doctorModel");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+const generateJwtToken = (doctorData) => {
+  return jwt.sign(doctorData, process.env.PRIVATE_KEY,{expiresIn: "1h"});
+}
 const registerDoctor = asyncHandler(async (req, res) => {
   const { name, email, speciality, phoneNumber, experience, address } = req.body;
 
@@ -27,8 +31,30 @@ const registerDoctor = asyncHandler(async (req, res) => {
     address,
   });
 
+  const token = generateJwtToken({
+    id: newDoctor._id,
+    name: newDoctor.name,
+    email: newDoctor.email,
+    speciality: newDoctor.speciality,
+    phoneNumber: newDoctor.phoneNumber,
+    experience: newDoctor.experience,
+    address: newDoctor.address,
+  })
+
   // Respond with success message and the created doctor
-  res.status(201).json({ message: "Doctor registered successfully", doctor: newDoctor });
+  res.status(201).json({ message: "Doctor registered successfully", doctor: newDoctor, token });
 });
 
-module.exports = { registerDoctor };
+const getAllDoctors = asyncHandler(async (req, res) => {
+  try {
+    const doctors = await Doctor.find({})
+    res.status(200).json(doctors);
+  }
+  catch(err){
+    return res.status(500).json({message:"error retrieving doctors", err});
+  }
+});
+
+
+module.exports = { registerDoctor, getAllDoctors };
+

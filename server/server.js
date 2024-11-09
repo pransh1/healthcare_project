@@ -3,6 +3,7 @@ const express = require("express");
 const connectDb = require("./config/dbConnections");
 const errorHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 // const hbs = require("hbs");
 const path = require("path");
 const multer = require("multer");
@@ -85,6 +86,7 @@ app.post("/profile", upload.single("avatar"), function(req, res, next) {
         imageUrls: imageUrls
     });
 });
+
 
 app.get("/allimages", (req, res) => {
     const imageUrls = []; 

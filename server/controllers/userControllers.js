@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel"); // Corrected variable name to 'User'
+const {generateJwtToken} = require("../middlewares/jwtMiddleware");
 require("dotenv").config();
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -44,17 +45,17 @@ const loginUser = asyncHandler(async(req, res) => {
         throw new Error("please fill all fields");
     }
     const user = await User.findOne({email});
+
     if(!user){
         return res.status(401).json({ message: "Invalid credentials" });
     }
     const passwordMatch  = await bcrypt.compare(password, user.password);
+
     if(!passwordMatch){
         return res.status(400).json({message:"password did not match"});
     } 
     
-    res.status(200).json({
-        message: "Login successful",
-        user: {
+    const token = generateJwtToken({
             id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -63,8 +64,8 @@ const loginUser = asyncHandler(async(req, res) => {
             bloodGroup: user.bloodGroup,
             age: user.age,
             gender: user.gender,
-        },
     });
-})
+    res.status(200).json({message:"Login successfully", token:token})
+});    
 
 module.exports = { registerUser , loginUser};

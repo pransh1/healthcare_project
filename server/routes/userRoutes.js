@@ -1,9 +1,12 @@
+// routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
-const {
-    registerUser,
-    loginUser
-}=require("../controllers/userControllers");
-router.post("/" , registerUser);
-router.post("/login", loginUser);
-module.exports=router;
+const User = require("../models/userModel");
+const userController = require("../controllers/userControllers") // Correct path to modules
+
+
+
+// Register a new user
+router.post("/login", userController.loginUser);
+router.post("/register", userController.registerUser);
+module.exports = router;
