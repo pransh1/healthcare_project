@@ -41,6 +41,7 @@ app.set('view engine', 'hbs');
 
 let imageUrls = [];
 
+app.use('/api/newsletters', require("./routes/newsLetterRoutes"));
 app.use('/api/register', require("./routes/userRoutes"));
 app.use("/api/doctors", require("./routes/doctorRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
